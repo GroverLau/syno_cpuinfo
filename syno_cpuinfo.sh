@@ -25,7 +25,17 @@ print() {
     esac
 }
 
-download_latest_release() {
+download() {
+    if [ -f "$install_path" ]; then
+        print "检测到已安装"
+        read -p "是否需要重新安装(y/N): " reinstall
+        if [[ "$reinstall" =~ ^[Yy]$ ]]; then
+            uninstall
+        else
+            print "脚本退出"
+            exit 0
+        fi
+    fi
     print "下载主程序"
     wget -O $install_path "$download_url"
     if [ $? -ne 0 ]; then
@@ -171,7 +181,7 @@ main() {
             ;;
         *)
             print g "安装"
-            download_latest_release
+            download
             clear
             print "查看CPU信息"
             $install_path -i
