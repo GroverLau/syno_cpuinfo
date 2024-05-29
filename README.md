@@ -19,6 +19,20 @@
 3. **数据替换**：替换数据中的特定字段，将实际的 CPU 信息和系统温度嵌入到数据中。
 4. **数据写入**：将修改后的数据写入到客户端。
 
+## 如何使用
+1. 登录到SSH终端
+2. 切换到root权限
+   > sudo -i
+3. 执行一键安装脚本
+   > wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh
+
+自定义CPU信号:
+   > wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh edit
+
+卸载:
+   > wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh uninstall
+   
+
 ## DSM系统显示
 ![DSM](img/1.jpg)
 
