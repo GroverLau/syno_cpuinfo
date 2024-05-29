@@ -22,16 +22,21 @@
 ## 如何使用
 1. 登录到SSH终端
 2. 切换到root权限
-   > sudo -i
+```bash
+    sudo -i
+```
 3. 执行一键安装脚本
-   > wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh
-
-自定义CPU信号:
-   > wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh edit
-
+```bash
+    wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh
+```
+自定义CPU型号:
+```bash
+   wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh edit
+```
 卸载:
+```bash
    > wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh uninstall
-   
+   ```
 
 ## DSM系统显示
 ![DSM](img/1.jpg)
@@ -43,5 +48,5 @@
 ![群晖管家](img/3.jpg)
 ##  
 ![不同方式读取温度](img/4.jpg)
-
+## 自定义型号
 ![自定义型号](img/5.jpg)
