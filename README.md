@@ -2,7 +2,7 @@
 
 ## 简介
 
-显示系统的真实 CPU 信息和温度。对后端进行代理并通过读取系统硬件信息，将 CPU 相关信息以及当前的系统温度嵌入到目标数据流中。支持自定义CPU型号.
+显示系统的真实 CPU 信息和温度。修改nginx配置反代后端并通过读取系统硬件信息，将CPU型号以及温度信息嵌入到目标数据流中。(支持自定义CPU型号)
 
 ## 功能
 
@@ -20,25 +20,28 @@
 4. **数据写入**：将修改后的数据写入到客户端。
 
 ## 如何使用
-1. 登录到SSH终端
+1. 启用SSH终端并登录
 2. 切换到root权限
 ```bash
     sudo -i
 ```
 3. 执行一键安装脚本
 ```bash
-    wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh
+    wget -O syno_cpuinfo.sh https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh
 ```
-自定义CPU型号:
+## 附加功能
+1. 自定义CPU型号:
 ```bash
-   wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh edit
+   wget  -O syno_cpuinfo.sh https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh edit
 ```
-卸载:
+2. 卸载:
 ```bash
-   > wget https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh uninstall
+   wget -O syno_cpuinfo.sh https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh uninstall
    ```
 
-## DSM系统显示
+# 截图展示
+
+## 信息中心
 ![DSM](img/1.jpg)
 
 ## 群晖助手
@@ -46,7 +49,9 @@
 
 ## 群晖管家
 ![群晖管家](img/3.jpg)
-##  
-![不同方式读取温度](img/4.jpg)
+
 ## 自定义型号
 ![自定义型号](img/5.jpg)
+
+## 温度
+![不同方式读取温度](img/4.jpg)
