@@ -172,6 +172,7 @@ main() {
         *)
             print g "安装"
             download_latest_release
+            clear
             print "查看CPU信息"
             $install_path -i
             customize $?
