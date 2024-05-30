@@ -168,6 +168,13 @@ reboot(){
     fi
 }
 
+check(){
+    if [[ $( whoami ) != "root" ]]; then
+        print r "请使用root权限运行脚本!"
+        exit 1
+    fi
+}
+
 main() {
     case "$1" in
         "uninstall")
@@ -204,4 +211,5 @@ EOF
 }
 clear
 logo
+check
 main $@
