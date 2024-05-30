@@ -27,16 +27,16 @@
 ```
 3. 执行一键安装脚本
 ```bash
-    wget -O syno_cpuinfo.sh https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh
+    wget -O syno_cpuinfo.sh https://mirror.ghproxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh && bash syno_cpuinfo.sh
 ```
 ## 附加功能
 1. 自定义CPU型号:
 ```bash
-   wget  -O syno_cpuinfo.sh https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh edit
+   wget -O syno_cpuinfo.sh https://mirror.ghproxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh && bash syno_cpuinfo.sh edit
 ```
 2. 卸载:
 ```bash
-   wget -O syno_cpuinfo.sh https://cdn.jsdelivr.net/gh/GroverLau/syno_cpuinfo/syno_cpuinfo.sh && bash syno_cpuinfo.sh uninstall
+   wget -O syno_cpuinfo.sh https://mirror.ghproxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh && bash syno_cpuinfo.sh uninstall
    ```
 
 # 截图展示
