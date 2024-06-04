@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"os/user"
-	"strconv"
 	"regexp"
 	"io"
 	"time"
@@ -20,6 +18,7 @@ const (
 	localAddr = "/run/scgi_proxy.sock"
 	remoteAddr = "/run/synoscgi.sock"
 	configPath = "/etc/syno_cpuinfo/config.conf"
+	sensorsConfigPath = "/etc/sensors3.conf"
 )
 
 type CpuInfo struct {
@@ -168,23 +167,8 @@ func listenAndProxy(localAddr, remoteAddr string) {
     if err != nil {
         log.Fatalf("Failed to listen on local socket: %v", err)
     }
-	httpUser, err := user.Lookup("http")
-    if err != nil {
-        log.Fatalf("Failed to lookup http user: %v", err)
-    }
 
-    httpUID, err := strconv.Atoi(httpUser.Uid)
-    if err != nil {
-        log.Fatalf("Failed to convert UID: %v", err)
-    }
-    httpGID, err := strconv.Atoi(httpUser.Gid)
-    if err != nil {
-        log.Fatalf("Failed to convert GID: %v", err)
-    }
-    if err := os.Chown(localAddr, httpUID, httpGID); err != nil {
-        log.Fatalf("Failed to change ownership of socket file: %v", err)
-    }
-    if err := os.Chmod(localAddr, 0770); err != nil {
+    if err := os.Chmod(localAddr, 0777); err != nil {
         log.Fatalf("Failed to set permissions on socket file: %v", err)
     }
 	log.Printf("Listening on %s, proxying to %s\n", localAddr, remoteAddr)
@@ -206,12 +190,22 @@ func listenAndProxy(localAddr, remoteAddr string) {
 func main() {
 
 	infoFlag := flag.Bool("i", false, "Read and print CPU info")
+	tempFlag := flag.Bool("t", false, "Read and print CPU Temperature")
 	flag.Parse()
 
 	if *infoFlag {
 		readConfig(configPath)
 		os.Exit(0)
-	} 
+	} else if *tempFlag {
+		temp, err := readCPUTemperature()
+		if err != nil || temp == 0 {
+			log.Println("Error reading CPU Temperature")
+			os.Exit(1)
+		}else {
+			log.Printf("CPU Temperature: \033[32m%d\033[0m\n", temp)
+			os.Exit(0)
+		}
+	}
 	readConfig(configPath)
 	listenAndProxy(localAddr, remoteAddr)
 }
