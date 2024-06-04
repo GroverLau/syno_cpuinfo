@@ -202,7 +202,7 @@ main() {
             print g "安装"
             download
             clear
-            check
+            checkInfo
             install
             ;;
     esac
