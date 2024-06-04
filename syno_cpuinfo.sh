@@ -168,11 +168,23 @@ reboot(){
     fi
 }
 
-check(){
+checkRoot(){
     if [[ $( whoami ) != "root" ]]; then
         print r "请使用root权限运行脚本!"
         exit 1
     fi
+}
+
+checkInfo(){
+    print "查看CPU温度"
+    $install_path -t
+    if [ "$?" -ne 0 ]; then
+        print r "获取 CPU 温度信息失败,检查模块、驱动是否正确加载? 或者你可以尝试添加/etc/sensors3.conf配置文件"
+        exit 1
+    fi
+    print "查看CPU信息"
+    $install_path -i
+    customize $?
 }
 
 main() {
@@ -190,9 +202,7 @@ main() {
             print g "安装"
             download
             clear
-            print "查看CPU信息"
-            $install_path -i
-            customize $?
+            check
             install
             ;;
     esac
@@ -211,5 +221,5 @@ EOF
 }
 clear
 logo
-check
+checkRoot
 main $@

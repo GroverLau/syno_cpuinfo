@@ -7,7 +7,7 @@
 ## 功能
 
 - 通过 /proc/cpuinfo 读取真实的 CPU 厂商、系列、核心数、时钟频率信息。
-- 通过 /sys/class/thermal/thermal_zone0/temp 文件读取当前的CPU温度。
+- 通过 <del>/sys/class/thermal/thermal_zone0/temp 文件</del>调用lm-sensors库读取当前的CPU温度。
 - 将处理后的数据写入到目标输出中。
 
 ## 实现原理

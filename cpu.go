@@ -203,21 +203,17 @@ func parseCoreInfo(cpuInfoContent string) string {
 	}
 }
 
+
 func readCPUTemperature() (int, error) {
-	tempPath := "/sys/class/thermal/thermal_zone0/temp"
+	//通过libsensors库获取CPU温度
+	temperatures := getTempFromSensors()
 
-	data, err := ioutil.ReadFile(tempPath)
-	if err != nil {
-		return 0, err
+	if len(temperatures) > 1 {
+		maxTemp := findMaxTemperature(temperatures)
+		return maxTemp, nil
+	} else if len(temperatures) == 1 {
+		return temperatures[0], nil
+	} else {
+		return 0, errors.New("No temperature data available")
 	}
-
-	tempStr := strings.TrimSpace(string(data))
-	tempMilliCelsius, err := strconv.Atoi(tempStr)
-	if err != nil {
-		return 0, err
-	}
-
-	tempCelsius := tempMilliCelsius / 1000
-
-	return tempCelsius, nil
 }
