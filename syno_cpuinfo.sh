@@ -37,7 +37,7 @@ download() {
         fi
     fi
     print "下载主程序"
-    wget -O $install_path "$download_url"
+    wget -q --show-progress -O $install_path "$download_url"
     if [ $? -ne 0 ]; then
         print r "下载失败"
         exit 1
@@ -69,7 +69,7 @@ replace(){
         print "执行失败,脚本退出."
         systemctl stop syno_cpuinfo &>/dev/null
         systemctl disable syno_cpuinfo &>/dev/null
-        rm -r /etc/systemd/system/syno_cpuinfo.service  &>/dev/null
+        rm -r /lib/systemd/system/syno_cpuinfo.service  &>/dev/null
         systemctl daemon-reload 
         rm -r $install_path &>/dev/null
         rm -r /etc/syno_cpuinfo/config.conf &>/dev/null
@@ -78,7 +78,7 @@ replace(){
 }
 
 install(){
-    cat <<EOF > /etc/systemd/system/syno_cpuinfo.service 
+    cat <<EOF > /lib/systemd/system/syno_cpuinfo.service 
 [Unit]
 Description=SCGI Proxy
 After=network.target
@@ -86,6 +86,7 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=${install_path}
+ExecReload=/bin/kill -HUP \$MAINPID
 Restart=always
 RestartSec=3
 StartLimitInterval=60
@@ -112,11 +113,11 @@ input(){
     read -p "请输入 Series(eg. I5-8600T/J3455): " series
     read -p "请输入 Cores(eg. 6 / 6 + 6): " cores
     read -p "请输入 Speed(eg. 2300): " speed
-    echo -e "Vendor: ${GREEN}$vendor${RESET}"
+    echo -e "\nVendor: ${GREEN}$vendor${RESET}"
     echo -e "Family: ${GREEN}$family${RESET}"
     echo -e "Series: ${GREEN}$series${RESET}"
     echo -e "Cores: ${GREEN}$cores${RESET}"
-    echo -e "Speed: ${GREEN}$speed${RESET}"
+    echo -e "Speed: ${GREEN}$speed${RESET}\n"
     mkdir /etc/syno_cpuinfo/ 2>/dev/null
     cat <<EOF > /etc/syno_cpuinfo/config.conf 
 Vendor =  $vendor
@@ -151,21 +152,11 @@ uninstall(){
     systemctl reload nginx
     systemctl stop syno_cpuinfo &>/dev/null
     systemctl disable syno_cpuinfo &>/dev/null
-    rm -r /etc/systemd/system/syno_cpuinfo.service  &>/dev/null
+    rm -r /lib/systemd/system/syno_cpuinfo.service  &>/dev/null
     systemctl daemon-reload 
     rm -r $install_path &>/dev/null
     rm -r /etc/syno_cpuinfo/config.conf &>/dev/null
     print "卸载完成"
-}
-
-reboot(){
-    reboot="Y"
-    read -p "是否重启代理工具? (Y/n): " reboot
-    if [[ "$reboot" =~ ^[Yy]$ ]]; then
-        systemctl restart syno_cpuinfo
-        systemctl status syno_cpuinfo
-        print "命令执行完成"
-    fi
 }
 
 checkRoot(){
@@ -187,6 +178,15 @@ checkInfo(){
     customize $?
 }
 
+reload(){
+    print "更新中...."
+    if systemctl reload syno_cpuinfo &>/dev/null; then
+        print g "Ok,代理工具运行中.."
+    else
+        print r "更新CPU信息失败"
+    fi
+}
+
 main() {
     case "$1" in
         "uninstall")
@@ -196,7 +196,7 @@ main() {
         "edit")
             print "编辑自定义CPU信息"
             input
-            reboot
+            reload
             ;;
         *)
             print g "安装"

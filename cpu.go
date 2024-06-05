@@ -203,17 +203,3 @@ func parseCoreInfo(cpuInfoContent string) string {
 	}
 }
 
-
-func readCPUTemperature() (int, error) {
-	//通过libsensors库获取CPU温度
-	temperatures := getTempFromSensors()
-
-	if len(temperatures) > 1 {
-		maxTemp := findMaxTemperature(temperatures)
-		return maxTemp, nil
-	} else if len(temperatures) == 1 {
-		return temperatures[0], nil
-	} else {
-		return 0, errors.New("No temperature data available")
-	}
-}

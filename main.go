@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 	"regexp"
 	"io"
 	"time"
@@ -33,10 +35,7 @@ var cpuInfo CpuInfo
 
 
 func replaceCPUInfo(data []byte) []byte {
-    temp, err := readCPUTemperature()
-    if err != nil {
-        log.Printf("Error reading CPU temperature:%v\n", err)
-    }
+    temp := getTempFromSensors()
     replacements := map[string]string{
         `"cpu_family":"[^"]+"`:  fmt.Sprintf(`"cpu_family":"%s"`, cpuInfo.Family),
         `"cpu_series":"[^"]+"`:  fmt.Sprintf(`"cpu_series":"%s"`, cpuInfo.Series),
@@ -185,6 +184,21 @@ func listenAndProxy(localAddr, remoteAddr string) {
     }
 }
 
+func readAndReload(){
+	readConfig(configPath)
+	sigs := make(chan os.Signal, 1)
+    signal.Notify(sigs, syscall.SIGHUP)
+
+    go func() {
+        for {
+			sig := <-sigs
+			if sig == syscall.SIGHUP {
+				log.Println("Performing reload...")
+				readConfig(configPath)
+			}
+        }
+    }()
+}
 
 
 func main() {
@@ -197,15 +211,17 @@ func main() {
 		readConfig(configPath)
 		os.Exit(0)
 	} else if *tempFlag {
-		temp, err := readCPUTemperature()
-		if err != nil || temp == 0 {
-			log.Println("Error reading CPU Temperature")
-			os.Exit(1)
-		}else {
+		if temp := getTempFromSensors(); temp !=0 {
 			log.Printf("CPU Temperature: \033[32m%d\033[0m\n", temp)
 			os.Exit(0)
+		}else {
+			log.Println("Error reading CPU Temperature")
+			os.Exit(1)
 		}
 	}
-	readConfig(configPath)
+
+	readAndReload()
+
 	listenAndProxy(localAddr, remoteAddr)
+
 }

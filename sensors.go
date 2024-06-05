@@ -14,13 +14,7 @@ import (
 	"strings"
 )
 
-type SubFeatureType int32
-
-const (
-	SubFeatureTypeTempInput          SubFeatureType = C.SENSORS_SUBFEATURE_TEMP_INPUT
-)
-
-func GetDetectedChips() []*C.struct_sensors_chip_name {
+func getDetectedChips() []*C.struct_sensors_chip_name {
 	var chips []*C.struct_sensors_chip_name
 	var count C.int = 0
 
@@ -35,7 +29,7 @@ func GetDetectedChips() []*C.struct_sensors_chip_name {
 	return chips
 }
 
-func GetFeatures(chip *C.struct_sensors_chip_name) []*C.struct_sensors_feature {
+func getFeatures(chip *C.struct_sensors_chip_name) []*C.struct_sensors_feature {
 	var features []*C.struct_sensors_feature
 	var count C.int = 0
 
@@ -50,7 +44,7 @@ func GetFeatures(chip *C.struct_sensors_chip_name) []*C.struct_sensors_feature {
 	return features
 }
 
-func GetSubFeaturesNumbers(chip *C.struct_sensors_chip_name, feature *C.struct_sensors_feature) []int {
+func getSubFeaturesNumbers(chip *C.struct_sensors_chip_name, feature *C.struct_sensors_feature) []int {
 	var Numbers []int
 	var count C.int = 0
 
@@ -59,7 +53,7 @@ func GetSubFeaturesNumbers(chip *C.struct_sensors_chip_name, feature *C.struct_s
 		if subfeatures == nil {
 			break
 		}
-		if SubFeatureType(subfeatures._type) == SubFeatureTypeTempInput {
+		if int32(subfeatures._type) == int32(C.SENSORS_SUBFEATURE_TEMP_INPUT) {
 			Numbers = append(Numbers, int(subfeatures.number))
 		}
 
@@ -68,14 +62,14 @@ func GetSubFeaturesNumbers(chip *C.struct_sensors_chip_name, feature *C.struct_s
 	return Numbers
 }
 
-func GetLabel(chip *C.struct_sensors_chip_name, feature *C.struct_sensors_feature) string {
-	clabel := C.sensors_get_label(chip, feature)
-	golabel := C.GoString(clabel)
-	C.free(unsafe.Pointer(clabel))
-	return golabel
+func getLabel(chip *C.struct_sensors_chip_name, feature *C.struct_sensors_feature) string {
+	label := C.sensors_get_label(chip, feature)
+	labelStr := C.GoString(label)
+	C.free(unsafe.Pointer(label))
+	return labelStr
 }
 
-func GetValue(chip *C.struct_sensors_chip_name, number int) int {
+func getValue(chip *C.struct_sensors_chip_name, number int) int {
 	var value C.double
 	C.sensors_get_value(chip, C.int(number), &value)
 
@@ -87,8 +81,8 @@ func checkLabel(label string, target string) bool {
 }
 
 
-func getTempFromSensors() []int{
-	var temperatures []int
+func getTempFromSensors() int{
+	var temperatures int = 0
 
     var fp *C.FILE
     if _, err := os.Stat(sensorsConfigPath); os.IsNotExist(err) {
@@ -109,38 +103,24 @@ func getTempFromSensors() []int{
 
     if res := C.sensors_init(fp); res != 0 {
         log.Println("Failed to initialize sensors")
-        return []int{0}
+        return 0
     }
     defer C.sensors_cleanup()
 
-	chips := GetDetectedChips()
+	chips := getDetectedChips()
 	for _, chip := range chips {
-		features := GetFeatures(chip)
+		features := getFeatures(chip)
 		for _, feature := range features {
-			numbers := GetSubFeaturesNumbers(chip, feature)
+			numbers := getSubFeaturesNumbers(chip, feature)
 			for _, number := range numbers {
-				if checkLabel(GetLabel(chip,feature),"Core "){
-					temp :=GetValue(chip,number)
-					temperatures = append(temperatures, temp)
-				}			
+				if temp := getValue(chip, number); temp > temperatures {
+					temperatures = temp
+				}		
 			}
 		}
 	}
 	return temperatures
 }
 
-func findMaxTemperature(temperatures []int) int {
-	if len(temperatures) == 0 {
-		return 0
-	}
-
-	maxTemp := temperatures[0]
-	for _, temp := range temperatures {
-		if temp > maxTemp {
-			maxTemp = temp
-		}
-	}
-	return maxTemp
-}
 
 
