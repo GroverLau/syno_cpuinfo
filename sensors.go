@@ -111,11 +111,13 @@ func getTempFromSensors() int{
 	for _, chip := range chips {
 		features := getFeatures(chip)
 		for _, feature := range features {
-			numbers := getSubFeaturesNumbers(chip, feature)
-			for _, number := range numbers {
-				if temp := getValue(chip, number); temp > temperatures {
-					temperatures = temp
-				}		
+			if checkLabel(getLabel(chip,feature),"Core "){
+				numbers := getSubFeaturesNumbers(chip, feature)
+				for _, number := range numbers {
+					if temp := getValue(chip, number); temp > temperatures {
+						temperatures = temp
+					}		
+				}
 			}
 		}
 	}
