@@ -5,7 +5,7 @@ RED='\e[31m'
 RESET='\e[0m'
 
 install_path="/bin/syno_cpuinfo"
-download_url="https://mirror.ghproxy.com/https://github.com/GroverLau/syno_cpuinfo/releases/latest/download/syno_cpuinfo"
+download_url="https://gh-proxy.com/https://github.com/GroverLau/syno_cpuinfo/releases/latest/download/syno_cpuinfo"
 #https://github.com/GroverLau/syno_cpuinfo/releases/latest/download/syno_cpuinfo
 
 print() {
