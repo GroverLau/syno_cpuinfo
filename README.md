@@ -27,16 +27,16 @@
 ```
 3. 执行一键安装脚本
 ```bash
-    bash <(curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh)
+    bash <(curl -sSL https://gh-proxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh)
 ```
 ## 附加功能
 1. 修改CPU型号(已安装):
 ```bash
-   bash <(curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh) edit
+   bash <(curl -sSL https://gh-proxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh) edit
 ```
 2. 卸载:
 ```bash
-   bash <(curl -sSL https://mirror.ghproxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh) uninstall
+   bash <(curl -sSL https://gh-proxy.com/https://raw.githubusercontent.com/GroverLau/syno_cpuinfo/main/syno_cpuinfo.sh) uninstall
    ```
 
 # 截图展示
@@ -55,3 +55,4 @@
 
 ## 测试使用不同方式获取温度
 ![不同方式读取温度](img/4.jpg)
+
